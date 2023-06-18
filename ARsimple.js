@@ -100,7 +100,7 @@ f3.add(controls, 'detectmarkers');
 f3.add(controls, 'cualdebug',0,1023);
 
 var f6 = gui.addFolder('Scene control');
-f6.add(controls, 'playvideo');
+// f6.add(controls, 'playvideo');
 f6.addColor(controls, 'colormesh1').onChange(controls.updateMatFlag);
 f6.addColor(controls, 'colormesh2').onChange(controls.updateMatFlag);
 f6.addColor(controls, 'colormesh3').onChange(controls.updateMatFlag);
@@ -288,8 +288,24 @@ if (controls.playvideo != controls.playvideoprev){
 	if (controls.detectmarkers){
 		// Sólo detecta marcadores si el flag del GUI está activado
 		var markers	= jsArucoMarker.detectMarkers(domElement);  // Detecta marcadores también con el video congelado
-
-	
+		var marker1 = false;
+		var marker1023 = false;
+		// Check if are there 7 AR markers
+		if(markers.length >= 9){
+			markers.forEach(function(marker){
+				// Check 1 and 1023 markers exist
+				if(marker.id == 1){
+					marker1 = true;
+				}
+				if(marker.id == 1023){
+					marker1023 = true;
+				}
+			});
+			if(marker1 && marker1023){
+				console.log("1 and 1023 markers detected");
+				controls.playvideo = false;
+			}
+		}
 		// see if this.markerId has been found
 		markers.forEach(function(marker){
 			 if ( marker.id == 265 ){
