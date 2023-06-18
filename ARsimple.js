@@ -131,6 +131,22 @@ var markerObject3D2 = new THREE.Object3D();
 scene.add(markerObject3D2);
 var markerObject3D3 = new THREE.Object3D();
 scene.add(markerObject3D3);
+var markerObject3D4 = new THREE.Object3D();
+scene.add(markerObject3D4);
+var markerObject3D5 = new THREE.Object3D();
+scene.add(markerObject3D5);
+var markerObject3D6 = new THREE.Object3D();
+scene.add(markerObject3D6);
+var markerObject3D7 = new THREE.Object3D();
+scene.add(markerObject3D7);
+var markerObject3D8 = new THREE.Object3D();
+scene.add(markerObject3D8);
+var markerObject3D9 = new THREE.Object3D();
+scene.add(markerObject3D9);
+var markerObject3D10 = new THREE.Object3D();
+scene.add(markerObject3D10);
+var markerObject3D11 = new THREE.Object3D();
+scene.add(markerObject3D11);
 
 // Usa una función de ejecución inmediata para asignar objeto renderizado al primer 
 // Object3D
@@ -206,12 +222,52 @@ var loader = new THREE.STLLoader();
 
 // Pablo: Third 3D object is associated to marker with id = 200
 ;(function(){
-		var geometry = new THREE.TorusGeometry(0.5,0.1,8,20);
-		var material = new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } );
-		
-		var mesh = new THREE.Mesh(geometry, material);
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
 		markerObject3D3.add( mesh );
 	})()
+
+// Add 3D objects for 7 markers
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D4.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D5.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D6.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D7.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D8.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D9.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D10.add( mesh );
+	})()
+
+;(function(){
+		var mesh = new THREE.Mesh(new THREE.TorusGeometry(0.5,0.1,8,20), new THREE.MeshBasicMaterial({ color: 0xc77000, wireframe : false } ));
+		markerObject3D11.add( mesh );
+	})()
+
+const markerObjects = [markerObject3D3, markerObject3D4, markerObject3D5, markerObject3D6, markerObject3D7, markerObject3D8, markerObject3D9, markerObject3D10, markerObject3D11]
 	
 // handle window resize
 $( window ).resize(function() {
@@ -285,13 +341,20 @@ if (controls.playvideo != controls.playvideoprev){
 	markerObject3D.visible = false;
 	markerObject3D2.visible = false;
 	markerObject3D3.visible = false;
+	markerObject3D4.visible = false;
+	markerObject3D5.visible = false;
+	markerObject3D6.visible = false;
+	markerObject3D7.visible = false;
+	markerObject3D8.visible = false;
+	markerObject3D9.visible = false;
+	markerObject3D10.visible = false;
+	markerObject3D11.visible = false;
 	if (controls.detectmarkers){
-		// Sólo detecta marcadores si el flag del GUI está activado
-		var markers	= jsArucoMarker.detectMarkers(domElement);  // Detecta marcadores también con el video congelado
+		var markers	= jsArucoMarker.detectMarkers(domElement);
 		var marker1 = false;
 		var marker1023 = false;
 		// Check if are there 7 AR markers
-		if(markers.length >= 9){
+		if(markers.length >= 7){
 			markers.forEach(function(marker){
 				// Check 1 and 1023 markers exist
 				if(marker.id == 1){
@@ -304,36 +367,15 @@ if (controls.playvideo != controls.playvideoprev){
 			if(marker1 && marker1023){
 				console.log("1 and 1023 markers detected");
 				controls.playvideo = false;
+				// Add 3D object to every marker detected
+				for(var i = 0; i < markers.length; i++){
+					if(markers[i].id != 1 && markers[i].id != 1023){
+						jsArucoMarker.markerToObject3D(markers[i], markerObjects[i], cualfocallength);
+						markerObjects[i].visible = true;
+					}
+				}
 			}
 		}
-		// see if this.markerId has been found
-		markers.forEach(function(marker){
-			 if ( marker.id == 265 ){
-				 jsArucoMarker.markerToObject3D(marker, markerObject3D, cualfocallength);
-				 markerObject3D.visible = true;
-				 markerObject3D.rotation.set(controls.objectrotationV, controls.objectrotationH, 0);  // Rota el objeto al completo
-				 objLayer1.visible = controls.layer1;
-				 objLayer2.visible = controls.layer2;
-				 objLayer3.visible = controls.layer3;  // Control de visibilidad de capas
-				 if (controls.changes_in_material){
-				   material1.color = new THREE.Color(controls.colormesh1);
-					 material1.needsUpdate = true;
-					 material2.color = new THREE.Color(controls.colormesh2);
-					 material2.needsUpdate = true;
-					 material3.color = new THREE.Color(controls.colormesh3);
-					 material3.needsUpdate = true;
-				 }
-				 
-			 } else if ( marker.id == 255 ){
-				 jsArucoMarker.markerToObject3D(marker, markerObject3D2, cualfocallength);
-				 markerObject3D2.visible = true;
-			} else if ( marker.id == 250 ){
-				 jsArucoMarker.markerToObject3D(marker, markerObject3D3, cualfocallength);
-				 markerObject3D3.visible = true;				 	 
-			 } else {
-				 return
-			 }			
-		})
 	}
 
 	
